@@ -33,6 +33,7 @@ users at once. Only one of the two fits in memory at a time.
 - [Hosting on This System](#hosting-on-this-system)
 - [Metering Gateway](#metering-gateway)
 - [Benchmarks](#benchmarks)
+- [TensorFold Comparison](#tensorfold-comparison)
 - [Prefill Tuning](#prefill-tuning)
 - [Live Monitoring](#live-monitoring)
 - [Repository Layout](#repository-layout)
@@ -213,6 +214,37 @@ flight, max_tokens 16,384 for math and 32,768 for long-form. Sent directly to
   budget for long-form clients.
 - Both math sets are near-saturated for these models, so they confirm the
   quantized model reasons correctly rather than separating the two models.
+
+## TensorFold Comparison
+
+The upstream authors now recommend their
+[TensorFold recipe](https://github.com/MiaAI-Lab/Qwen3.8-Flash-Next-Single-DGX-Spark-TensorFold):
+a Zig engine serving `azampatti/Qwen3.8-Flash-Next-125B-A5B-INT4-AutoRound`
+(GPTQ int4, **5 active experts instead of 10**, 65.7 GiB in memory). Tested on
+the same box on 2026-10-09 with the same scripts
+(`benchmarks/tensorfold_result.json`, `reasoning_result_tensorfold.json`):
+
+| | vLLM NVFP4 (this repo) | TensorFold INT4 |
+|---|---|---|
+| Decode, 1 user | 34.7 tok/s | **53.1** |
+| Decode, 8 users | 115.1 tok/s | **220.0** |
+| Max concurrent | **16** (166.8 tok/s) | 8 |
+| Cold 32k / 64k prompt | 15.5 s / 31.6 s | 14.5 s / 26.5 s |
+| Repeat 64k prompt (cache hit) | 1.72 s | **0.20 s** |
+| Other streams while a 32k prompt prefills | ~1 s steps | **frozen ~12.8 s** |
+| GSM8K / MATH-500 | 99% / 100% | 99% / 99% (1 truncated) |
+| Tokens per MATH-500 answer | **1,342** | 1,500 |
+| Long-form avg | 29,510 tok | 28,592 tok |
+| Cold start | ~12 min | **2 min** |
+| `response_format` (structured output) | yes | no (HTTP 400) |
+
+- TensorFold decodes 1.5-1.9x faster and reuses its prefix cache almost
+  perfectly, but it **pauses every running stream until a new prompt has been
+  read**, so a 30-60k agent prompt freezes other users for 15-30 s.
+- The two math sets don't separate the two builds (both at the ceiling); the
+  authors' own harness puts INT4-AR ~10% below on general capability.
+- Pick TensorFold for few users and short or repeated prompts; keep vLLM for
+  mixed multi-user traffic with long fresh prompts.
 
 ## Prefill Tuning
 

@@ -88,16 +88,19 @@ def main():
         t0 = time.time()
         s, pt, c = ttft(a.base, a.model, ctx(a.mixed_context, uuid.uuid4()))
         t1 = time.time()
+        # A gap belongs to a window if the interval (ts - g, ts] overlaps it, so a
+        # stream that freezes for the whole prefill still contributes its long gap.
+        time.sleep(3)
         stop.set()
         quiet = [g for ts, g in gaps if t0 - 5 <= ts < t0]
-        busy = [g for ts, g in gaps if t0 <= ts < t1]
+        busy = [g for ts, g in gaps if ts > t0 and ts - g < t1]
         out["mixed"] = {"decoders": a.decoders, "prompt_tokens": pt, "ttft_s": round(s, 2),
                         "quiet_gap_ms": [round(1000 * pct(quiet, q)) for q in (0.5, 0.95)],
                         "prefill_gap_ms": [round(1000 * pct(busy, q)) for q in (0.5, 0.95)]
-                        + [round(1000 * max(busy))] if busy else None}
+                        + [round(1000 * max(busy))] if busy else None, "prefill_gaps_counted": len(busy)}
         print(f"[{a.tag}] mixed {a.decoders} decoders + cold {pt} tok: TTFT {s:.2f}s | decoder gap "
               f"quiet p50/p95 {out['mixed']['quiet_gap_ms']} ms, during prefill p50/p95/max "
-              f"{out['mixed']['prefill_gap_ms']} ms")
+              f"{out['mixed']['prefill_gap_ms']} ms ({len(busy)} gaps)")
     with open(os.path.join(os.path.dirname(__file__), "prefill_results.jsonl"), "a") as f:
         f.write(json.dumps(out) + "\n")
 

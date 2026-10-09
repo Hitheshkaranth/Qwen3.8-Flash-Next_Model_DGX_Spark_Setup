@@ -1,0 +1,4 @@
+qwen3.8-flash-next-tf            users= 1  aggregate=   53.1 tok/s  per-user=  53.1 tok/s
+qwen3.8-flash-next-tf            users= 4  aggregate=  160.4 tok/s  per-user=  40.2 tok/s
+qwen3.8-flash-next-tf            users= 8  aggregate=  220.0 tok/s  per-user=  28.5 tok/s
+qwen3.8-flash-next-tf            users=12  aggregate=  231.4 tok/s  per-user=  29.0 tok/s
