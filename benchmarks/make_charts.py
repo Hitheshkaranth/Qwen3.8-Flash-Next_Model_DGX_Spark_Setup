@@ -83,5 +83,30 @@ def prefill():
     print("wrote prefill_chunk_comparison.png")
 
 
+def reasoning():
+    paths = {k: os.path.join(HERE, f"reasoning_result_{k}.json") for k in ("ornith", "flashnext")}
+    if not all(os.path.exists(p) for p in paths.values()):
+        print("skipping reasoning chart: need reasoning_result_ornith.json and reasoning_result_flashnext.json")
+        return
+    a, b = (json.load(open(paths[k])) for k in ("ornith", "flashnext"))
+    labels = ["Ornith-1.5-35B-A3B\n(reference)", "Qwen3.8-Flash-Next\n(this repo)"]
+    colors = [BLUE, ORANGE]
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.6))
+    bar_panel(axes[0], "GSM8K accuracy (100)", labels,
+              [a["gsm8k"]["accuracy"] * 100, b["gsm8k"]["accuracy"] * 100], colors, "{:.0f}%", "% correct")
+    bar_panel(axes[1], "MATH-500 accuracy (100, integer answers)", labels,
+              [a["math500"]["accuracy"] * 100, b["math500"]["accuracy"] * 100], colors, "{:.0f}%", "% correct")
+    bar_panel(axes[2], "Avg. long-form output length", labels,
+              [a["longform"]["avg_tokens"], b["longform"]["avg_tokens"]], colors, "{:,.0f}", "tokens (cap 32,768)")
+    for ax in axes[:2]:
+        ax.set_ylim(0, 105)
+    fig.suptitle("Reasoning and output length - same prompts, sampling and limits for both models",
+                 x=0.01, ha="left", fontsize=13, color=INK)
+    fig.tight_layout()
+    fig.savefig(os.path.join(HERE, "reasoning_comparison.png"), dpi=150)
+    print("wrote reasoning_comparison.png")
+
+
 throughput()
 prefill()
+reasoning()

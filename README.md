@@ -191,6 +191,29 @@ while it prefills (quiet baseline ~120–155 ms).
 | **2048** | **3.79 s** | **15.5 s** | **31.6 s** | **2,080** | **0.55 s** | **1,019 ms** | 851k |
 | 4096 | 3.51 s | 13.8 s | 28.1 s | 2,320 | 1.58 s | 1,774 ms | 868k |
 
+### Reasoning & Output Length
+
+![Reasoning comparison](benchmarks/reasoning_comparison.png)
+
+`benchmarks/reasoning_bench.py` (same prompts, sampling and limits as the
+Ornith repo): thinking on, temperature 0.6 / top_p 0.95 / top_k 20, 16 in
+flight, max_tokens 16,384 for math and 32,768 for long-form. Sent directly to
+`:8006` so the gateway's per-user cap doesn't throttle it to 4.
+
+| | Flash-Next | Ornith |
+|---|---|---|
+| GSM8K (100) | **99%**, 469 tok avg, 354 s | 98%, 384 tok avg, 122 s |
+| MATH-500 (100 integer answers) | **100%**, 1,342 tok avg, 0 truncated, 905 s | 97%, 1,937 tok avg, 3 truncated, 626 s |
+| Long-form, 4 prompts | 29,510 tok avg, 3 of 4 hit the 32k cap | 17,804 tok avg, 1 hit the cap |
+
+- Flash-Next is at the ceiling on both math sets and solves MATH-500 in ~30%
+  fewer tokens than Ornith, but still takes longer on the clock because it
+  decodes ~3x slower.
+- It writes far longer when asked to write at length; set a `max_tokens`
+  budget for long-form clients.
+- Both math sets are near-saturated for these models, so they confirm the
+  quantized model reasons correctly rather than separating the two models.
+
 ## Prefill Tuning
 
 What prefill time on this box is made of, and what moved it:
@@ -239,7 +262,7 @@ install.sh                    clone recipe @ pinned commit, patch, configure, do
 config/flash-next.env         the tested .env (API key blank; filled by install.sh)
 patches/                      local fixes applied to the upstream recipe
 scripts/warmup.sh             wait for health, prefill one 8k prompt
-benchmarks/                   throughput_bench.py, prefill_bench.py, results, charts, make_charts.py
+benchmarks/                   throughput, prefill and reasoning benches, results, charts, make_charts.py
 gateway/                      metering gateway (per-user keys, usage DB, per-user concurrency cap)
 monitoring/                   Prometheus scrape config, Grafana dashboard, bypass alert
 docs/GATEWAY.md               gateway guide
