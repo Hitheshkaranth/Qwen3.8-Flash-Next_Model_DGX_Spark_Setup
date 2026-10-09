@@ -228,7 +228,7 @@ the same box on 2026-10-09 with the same scripts
 |---|---|---|
 | Decode, 1 user | 34.7 tok/s | **53.1** |
 | Decode, 8 users | 115.1 tok/s | **220.0** |
-| Max concurrent | **16** (166.8 tok/s) | 8 |
+| Max concurrent | 16 (166.8 tok/s) | 8 by default; **16 → 395.8 tok/s** (24.7 per user) |
 | Cold 32k / 64k prompt | 15.5 s / 31.6 s | 14.5 s / 26.5 s |
 | Repeat 64k prompt (cache hit) | 1.72 s | **0.20 s** |
 | Other streams while a 32k prompt prefills | ~1 s steps | **frozen ~12.8 s** |
@@ -238,6 +238,8 @@ the same box on 2026-10-09 with the same scripts
 | Cold start | ~12 min | **2 min** |
 | `response_format` (structured output) | yes | no (HTTP 400) |
 
+- With `PARALLEL=16` (the recipe's maximum) TensorFold reached 395.8 tok/s at
+  16 users, 2.4x vLLM at the same width (8 users: 265.6 tok/s).
 - TensorFold decodes 1.5-1.9x faster and reuses its prefix cache almost
   perfectly, but it **pauses every running stream until a new prompt has been
   read**, so a 30-60k agent prompt freezes other users for 15-30 s.

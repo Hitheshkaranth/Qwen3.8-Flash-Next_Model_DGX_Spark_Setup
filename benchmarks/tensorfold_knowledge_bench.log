@@ -1,0 +1,11 @@
+Downloading pyarrow (48.5MiB)
+ Downloaded pyarrow
+Installed 1 package in 6ms
+MMLU-Pro: 700 questions, 0 already done, 700 to run
+  25/700  running acc 0.960  565s
+  50/700  running acc 0.960  565s
+  75/700  running acc 0.947  909s
+  100/700  running acc 0.930  1526s
+  125/700  running acc 0.928  1922s
+  150/700  running acc 0.913  2336s
+  175/700  running acc 0.920  2512s
