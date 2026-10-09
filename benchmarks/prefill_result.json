@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-09",
+  "method": "benchmarks/prefill_bench.py. cold = unique nonce first, so no prefix-cache hit; warm = identical prompt resent; TTFT measured with max_tokens=1 through the gateway. mixed = 8 streams decoding, then one cold ~32k prompt sent directly to :8006; 'stall' is the decoders' gap between streamed chunks while that prompt prefills (quiet-window p50 ~120-155 ms). Shared production server, light background traffic.",
+  "chunks": {
+    "1024": {"cold_ttft_s": {"8k": 4.83, "32k": 18.99, "64k": 38.55}, "cold_tok_s_32k": 1690,
+             "warm_ttft_s": {"8k": 1.21, "32k": 0.80, "64k": 1.22},
+             "mixed_ttft_32k_s": 21.48, "stall_ms_p50_p95": [632, 669], "kv_cache_tokens": 972422},
+    "2048": {"cold_ttft_s": {"8k": 3.79, "32k": 15.46, "64k": 31.56}, "cold_tok_s_32k": 2077,
+             "warm_ttft_s": {"8k": 0.79, "32k": 0.55, "64k": 1.72},
+             "mixed_ttft_32k_s": 18.86, "stall_ms_p50_p95": [1019, 3399], "kv_cache_tokens": 850869,
+             "first_request_after_restart_8k": {"ttft_s": 5.26, "tok_s": 1541}, "chosen": true},
+    "4096": {"cold_ttft_s": {"8k": 3.51, "32k": 13.82, "64k": 28.12}, "cold_tok_s_32k": 2322,
+             "warm_ttft_s": {"8k": 1.67, "32k": 1.58, "64k": 1.70},
+             "mixed_ttft_32k_s": 15.21, "stall_ms_p50_p95": [1774, 2200], "kv_cache_tokens": 868443,
+             "first_request_after_restart_8k": {"ttft_s": 5.33, "tok_s": 1522},
+             "note": "warm turns reuse one 1,664-token cache block fewer than at 1024/2048"}
+  },
+  "prefix_cache_hit_rate_live": 0.80
+}

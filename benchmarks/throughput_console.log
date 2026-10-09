@@ -1,0 +1,7 @@
+== via gateway :8080
+qwen3.8-flash-next               users= 1  aggregate=   34.7 tok/s  per-user=  34.8 tok/s
+qwen3.8-flash-next               users= 8  aggregate=  115.1 tok/s  per-user=  14.7 tok/s
+qwen3.8-flash-next               users=16  aggregate=  166.8 tok/s  per-user=  11.4 tok/s
+qwen3.8-flash-next               users=20  aggregate=  124.2 tok/s  per-user=   9.9 tok/s
+== direct :8006
+qwen3.8-flash-next               users=16  aggregate=  169.6 tok/s  per-user=  11.1 tok/s

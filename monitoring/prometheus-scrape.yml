@@ -1,0 +1,11 @@
+# Add under `scrape_configs:` in prometheus.yml. Assumes Prometheus runs in Docker
+# with `extra_hosts: ["host.docker.internal:host-gateway"]` (host.docker.internal
+# resolves to 172.17.0.1, which is where this server binds).
+# If you edit a single-file bind-mounted prometheus.yml with `sed -i`, run
+# `docker restart <prometheus>` -- SIGHUP re-reads the old inode.
+  - job_name: vllm                     # vLLM /metrics stays open (no key needed)
+    static_configs:
+      - targets: ["host.docker.internal:8006"]
+  - job_name: llm-gateway              # per-user / per-device token counters
+    static_configs:
+      - targets: ["host.docker.internal:8080"]

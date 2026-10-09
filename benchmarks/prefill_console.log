@@ -1,0 +1,27 @@
+[baseline-chunk1024] cold   8100 tok  TTFT   4.83s    1677 tok/s  cached=0
+[baseline-chunk1024] warm   8100 tok  TTFT   1.21s  cached=6656
+[baseline-chunk1024] cold  32103 tok  TTFT  18.99s    1690 tok/s  cached=0
+[baseline-chunk1024] warm  32103 tok  TTFT   0.80s  cached=31616
+[baseline-chunk1024] cold  64101 tok  TTFT  38.55s    1663 tok/s  cached=0
+[baseline-chunk1024] warm  64101 tok  TTFT   1.22s  cached=63232
+[baseline-chunk1024] mixed 8 decoders + cold 32101 tok: TTFT 21.48s | decoder gap quiet p50/p95 [155, 165] ms, during prefill p50/p95/max [632, 669, 679] ms
+[chunk4096] cold   8103 tok  TTFT   3.51s    2311 tok/s  cached=0
+[chunk4096] warm   8103 tok  TTFT   1.67s  cached=4992
+[chunk4096] cold  32099 tok  TTFT  13.82s    2322 tok/s  cached=0
+[chunk4096] warm  32099 tok  TTFT   1.58s  cached=29952
+[chunk4096] cold  64100 tok  TTFT  28.12s    2280 tok/s  cached=0
+[chunk4096] warm  64100 tok  TTFT   1.70s  cached=61568
+[chunk4096] mixed 8 decoders + cold 32102 tok: TTFT 367.22s | decoder gap quiet p50/p95 [91, 105] ms, during prefill p50/p95/max [95, 103, 3971] ms
+[chunk4096-mixed-direct] cold   2104 tok  TTFT   1.10s    1921 tok/s  cached=0
+[chunk4096-mixed-direct] warm   2104 tok  TTFT   1.36s  cached=0
+[chunk4096-mixed-direct] mixed 8 decoders + cold 32102 tok: TTFT 15.21s | decoder gap quiet p50/p95 [143, 157] ms, during prefill p50/p95/max [1774, 2200, 2201] ms
+[chunk2048] first request after restart: 8100 tok TTFT 5.26s 1541 tok/s cached=0
+[chunk2048] cold   8096 tok  TTFT   3.79s    2135 tok/s  cached=0
+[chunk2048] warm   8096 tok  TTFT   0.79s  cached=6656
+[chunk2048] cold  32103 tok  TTFT  15.46s    2077 tok/s  cached=0
+[chunk2048] warm  32103 tok  TTFT   0.55s  cached=31616
+[chunk2048] cold  64102 tok  TTFT  31.56s    2031 tok/s  cached=0
+[chunk2048] warm  64102 tok  TTFT   1.72s  cached=61568
+[chunk2048-mixed-direct] cold   2100 tok  TTFT   1.28s    1644 tok/s  cached=0
+[chunk2048-mixed-direct] warm   2100 tok  TTFT   1.26s  cached=0
+[chunk2048-mixed-direct] mixed 8 decoders + cold 32104 tok: TTFT 18.86s | decoder gap quiet p50/p95 [118, 132] ms, during prefill p50/p95/max [1019, 3399, 3400] ms

@@ -1,0 +1,13 @@
+diff --git a/download.sh b/download.sh
+index 2131cac..24b6bfa 100755
+--- a/download.sh
++++ b/download.sh
+@@ -243,7 +243,7 @@ if [[ "${SKIP_ARIA:-0}" != "1" ]]; then
+     # must stay owned by the host user, or the unprivileged sha256 verify
+     # below (and hf/huggingface-cli on the host) cannot write their state.
+     docker run --rm -i \
+-        -e HF_HOME=/hf -e HF_TOKEN="$HF_TOKEN" \
++        -e HF_HOME=/hf -e HF_HUB_DISABLE_XET="${HF_HUB_DISABLE_XET:-}" -e HF_TOKEN="$HF_TOKEN" \
+         -u "$(id -u):$(id -g)" \
+         -v "$HF_CACHE_DIR:/hf" \
+         --entrypoint python3 "$IMAGE" -c "$DL_PY" "$MODEL_ID" "$RETRY_HINT"

@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-09",
+  "hardware": "NVIDIA DGX Spark (GB10), 121 GiB unified memory",
+  "vllm": "vllm/vllm-openai:qwen38-flash-next (MiaAI-Lab recipe @ b7c5da1, V2 model runner)",
+  "method": "benchmarks/throughput_bench.py: every request generates exactly 512 tokens (ignore_eos), temperature 0.6, prompt 'Write a detailed history of the printing press.', one warm-up request, via the metering gateway (:8080). Swept past --max-num-seqs (16). Taken with MAX_NUM_BATCHED_TOKENS=1024; decode-only throughput does not depend on the prefill chunk.",
+  "results": {
+    "qwen3.8-flash-next (this repo, NVFP4, MTP k=3)": {
+      "users_1": {"aggregate_tok_s": 34.7, "per_user_tok_s": 34.8},
+      "users_8": {"aggregate_tok_s": 115.1, "per_user_tok_s": 14.7},
+      "users_16": {"aggregate_tok_s": 166.8, "per_user_tok_s": 11.4},
+      "users_20": {"aggregate_tok_s": 124.2, "per_user_tok_s": 9.9},
+      "direct_users_16": {"aggregate_tok_s": 169.6, "per_user_tok_s": 11.1},
+      "peak_aggregate_tok_s": 166.8,
+      "peak_at_users": 16,
+      "mtp_acceptance": 0.363,
+      "kv_cache_tokens": 850869,
+      "max_concurrency_262k": 3.25,
+      "weights_gib": 99,
+      "cold_start_to_ready_s": 720
+    },
+    "ornith-1.5-35b-a3b (reference, MTP k=1)": {
+      "users_1": {"aggregate_tok_s": 79.0, "per_user_tok_s": 79.0},
+      "users_16": {"aggregate_tok_s": 438.8, "per_user_tok_s": 28.0},
+      "users_20": {"aggregate_tok_s": 490.3, "per_user_tok_s": 24.9},
+      "users_24": {"aggregate_tok_s": 405.7, "per_user_tok_s": 23.7},
+      "peak_aggregate_tok_s": 490.3,
+      "peak_at_users": 20,
+      "source": "github.com/Hitheshkaranth/Ornith-1.5_A3B_Model_DGX_Spark_Setup, 2026-09-26"
+    }
+  }
+}
